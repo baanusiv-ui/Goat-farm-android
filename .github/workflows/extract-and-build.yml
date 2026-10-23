@@ -47,6 +47,18 @@ jobs:
             --include='build.gradle' \
             --include='build.gradle.kts' || true
 
+      - name: Build debug APK
+        run: |
+          gradle --no-daemon \
+            -p "${{ steps.locate.outputs.project_dir }}" \
+            assembleDebug \
+            -x validateSigningDebug
+
+      - name: Find generated APK
+        run: |
+          find "${{ steps.locate.outputs.project_dir }}" \
+            -type f -name "*.apk" -print
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
