@@ -39,11 +39,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build APK
+      - name: Inspect signing configuration
         run: |
-          gradle --no-daemon \
-            -p "${{ steps.locate.outputs.project_dir }}" \
-            assembleDebug
+          grep -R -n -E \
+            'signingConfig|signingConfigs|debug.keystore|storeFile' \
+            "${{ steps.locate.outputs.project_dir }}/app" \
+            --include='build.gradle' \
+            --include='build.gradle.kts' || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
